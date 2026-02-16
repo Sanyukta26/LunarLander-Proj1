@@ -102,10 +102,16 @@ def print_state(game):
 
 # TODO: IMPLEMENT HERE THE METHOD TO SAVE DATA TO FILE
 def print_line_data(game):
-    """
-    Return a string with the game state information to be saved to a file.
-    
-    This method should return a string with the relevant information from
+    """ Return a string with the game state information to be saved to a file. """
+    return (
+        f"{game.x_position},{game.y_position},"
+        f"{game.x_velocity},{game.y_velocity},"
+        f"{game.angle},{game.angular_velocity},"
+        f"{game.left_leg_contact},{game.right_leg_contact}"
+        f"{game.score},{game.action}"
+    )
+
+    """This method should return a string with the relevant information from
     the game state, with values separated by commas.
     
     The student should decide which features are relevant for the task.
