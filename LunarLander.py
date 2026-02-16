@@ -20,7 +20,7 @@ import pygame
 GRAVITY = -1.62
 
 # Agent mode: Set to True to use the Tutorial 1 agent, False for keyboard control
-USE_AGENT = False
+USE_AGENT = True
 
 # Environment configuration
 ENV_NAME = "LunarLander-v3"
@@ -115,10 +115,9 @@ def print_line_data(game):
 
 # TODO: IMPLEMENT HERE THE INTELLIGENT AGENT METHOD
 def move_tutorial_1(game):
-    """
-    Implement your own rule-based agent to land the spacecraft.
+    # Implement your own rule-based agent to land the spacecraft.
     
-    This method receives the current game state and must return an action:
+    """This method receives the current game state and must return an action:
     - ACTION_NOTHING (0): Do nothing
     - ACTION_LEFT_ENGINE (1): Fire left orientation engine (rotate clockwise)
     - ACTION_MAIN_ENGINE (2): Fire main engine (slow down descent)
@@ -140,6 +139,32 @@ def move_tutorial_1(game):
     
     YOUR CODE HERE
     """
+
+    x=game.x_position
+    vx=game.x_velocity
+    vy=game.y_velocity
+    angle=game.angle
+
+    #1 making sure lander upright
+    if angle > 0.02:
+        # rotate clockwise for tilt
+        return ACTION_LEFT_ENGINE
+    if angle < -0.02:
+        #otherway for tilt
+        return ACTION_RIGHT_ENGINE
+
+    #2 make sure landing in middle
+    if abs(angle) < 0.02:
+        if x>0.05 or vx>0.05:
+            return ACTION_LEFT_ENGINE
+        if x<-0.05 or vx<-0.05:
+            return ACTION_RIGHT_ENGINE
+
+    #3make sure doesn't crash on landing
+    if vy < -0.4:
+        return ACTION_MAIN_ENGINE
+
+    #4ACTION_NOTHING (0): Do nothing
     return ACTION_NOTHING
 
 def move_keyboard(keys_pressed):
