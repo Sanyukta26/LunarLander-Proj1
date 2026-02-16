@@ -102,23 +102,16 @@ def print_state(game):
 
 # TODO: IMPLEMENT HERE THE METHOD TO SAVE DATA TO FILE
 def print_line_data(game):
-    """ Return a string with the game state information to be saved to a file. """
+    # Return a string with the game state information to be saved to a file.
+    # This method should return a string with the relevant information from the game state, with values separated by commas.
+    # The student should decide which features are relevant for the task.
     return (
         f"{game.x_position},{game.y_position},"
         f"{game.x_velocity},{game.y_velocity},"
         f"{game.angle},{game.angular_velocity},"
-        f"{game.left_leg_contact},{game.right_leg_contact}"
+        f"{game.left_leg_contact},{game.right_leg_contact},"
         f"{game.score},{game.action}"
     )
-
-    """This method should return a string with the relevant information from
-    the game state, with values separated by commas.
-    
-    The student should decide which features are relevant for the task.
-    
-    YOUR CODE HERE
-    """
-    pass
 
 # TODO: IMPLEMENT HERE THE INTELLIGENT AGENT METHOD
 def move_tutorial_1(game):
@@ -208,6 +201,15 @@ def main():
     # Initialize the environment
     observation, info = env.reset()
     game = GameState(observation)
+
+    # CSV file
+    csv_file = open("lander_data.csv", "a")
+
+    # header
+    if csv_file.tell() ==0:
+        csv_file.write(
+            "x_position,y_position,x_velocity,y_velocity,angle,angular_velocity,left_leg,right_leg,score,action\n"
+        )
     
     # FPS controller
     clock = pygame.time.Clock()
@@ -243,6 +245,7 @@ def main():
             
             # Update game state
             game.update(observation, reward)
+            csv_file.write(print_line_data(game) + "\n")
             
             # Print state
             print_state(game)
@@ -276,6 +279,7 @@ def main():
     finally:
         env.close()
         pygame.quit()
+        csv_file.close()
         print(f"\nGame ended. Total episodes: {episode_count}")
         print("Thank you for playing!")
 
