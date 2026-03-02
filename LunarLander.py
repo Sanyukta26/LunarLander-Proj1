@@ -141,31 +141,34 @@ def move_tutorial_1(game):
     """
 
     x=game.x_position
-    vx=game.x_velocity
-    vy=game.y_velocity
+    vy = game.y_velocity
+    vx = game.x_velocity
     angle=game.angle
 
-    #1 making sure lander upright
-    if angle > 0.02:
-        # rotate clockwise for tilt
-        return ACTION_LEFT_ENGINE
-    if angle < -0.02:
-        #otherway for tilt
-        return ACTION_RIGHT_ENGINE
-
-    #2 make sure landing in middle
-    if abs(angle) < 0.02:
-        if x>0.05 or vx>0.05:
-            return ACTION_LEFT_ENGINE
-        if x<-0.05 or vx<-0.05:
-            return ACTION_RIGHT_ENGINE
-
-    #3make sure doesn't crash on landing
-    if vy < -0.4:
+     # slow down descent
+    if vy < -0.2:
         return ACTION_MAIN_ENGINE
 
-    #4ACTION_NOTHING (0): Do nothing
+    # make sure lander is upright
+    if angle < 0.1:
+        return ACTION_LEFT_ENGINE
+    elif angle > -0.1:
+        return ACTION_RIGHT_ENGINE
+    
+    # only if upright, center to landing pad
+    if angle > -0.1 and angle < 0.1:
+        if x > 0.05 and vx > 0:
+                return ACTION_LEFT_ENGINE
+        elif x < -0.05 and vx < 0:
+                return ACTION_RIGHT_ENGINE
+   
+
+    if vy < -0.2:
+        return ACTION_MAIN_ENGINE
+    
+    # do nothing
     return ACTION_NOTHING
+    
 
 def move_keyboard(keys_pressed):
     """
