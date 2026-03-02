@@ -20,7 +20,7 @@ import pygame
 GRAVITY = -1.62
 
 # Agent mode: Set to True to use the Tutorial 1 agent, False for keyboard control
-USE_AGENT = True
+USE_AGENT = False
 
 # Environment configuration
 ENV_NAME = "LunarLander-v3"
@@ -227,14 +227,24 @@ def main():
     observation, info = env.reset()
     game = GameState(observation)
 
-    # CSV file
-    csv_file = open("lander_data.csv", "a")
+    # arff file
+    arff_file = open("all_data_lunarlander.arff", "a")
 
-    # header
-    if csv_file.tell() ==0:
-        csv_file.write(
-            "x_position,y_position,x_velocity,y_velocity,angle,angular_velocity,left_leg,right_leg,score,action\n"
-        )
+    if arff_file.tell()==0:
+        arff_file.write("@relation lunar_lander\n\n")
+        arff_file.write("@attribute x_position numeric\n")
+        arff_file.write("@attribute y_position numeric\n")
+        arff_file.write("@attribute x_velocity numeric\n")
+        arff_file.write("@attribute y_velocity numeric\n")
+        arff_file.write("@attribute angle numeric\n")
+        arff_file.write("@attribute angular_velocity numeric\n")
+        arff_file.write("@attribute left_leg {0,1}\n")
+        arff_file.write("@attribute right_leg {0,1}\n")
+        arff_file.write("@attribute score numeric\n")
+        arff_file.write("@attribute action {0,1,2,3}\n\n")
+        arff_file.write("@data\n")
+
+
     
     # FPS controller
     clock = pygame.time.Clock()
@@ -270,7 +280,7 @@ def main():
             
             # Update game state
             game.update(observation, reward)
-            csv_file.write(print_line_data(game) + "\n")
+            arff_file.write(print_line_data(game) + "\n")
             
             # Print state
             print_state(game)
@@ -304,7 +314,7 @@ def main():
     finally:
         env.close()
         pygame.quit()
-        csv_file.close()
+        arff_file.close()
         print(f"\nGame ended. Total episodes: {episode_count}")
         print("Thank you for playing!")
 
