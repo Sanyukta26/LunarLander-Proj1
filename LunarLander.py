@@ -109,7 +109,7 @@ def print_line_data(game):
         f"{game.x_position},{game.y_position},"
         f"{game.x_velocity},{game.y_velocity},"
         f"{game.angle},{game.angular_velocity},"
-        f"{game.left_leg_contact},{game.right_leg_contact},"
+        f"{int(game.left_leg_contact)},{int(game.right_leg_contact)},"
         f"{game.score},{game.action}"
     )
 
