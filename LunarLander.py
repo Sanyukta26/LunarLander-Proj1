@@ -12,6 +12,7 @@ import gymnasium as gym
 import sys
 import time
 import pygame
+import math
 
 # GRAVITY setting
 # Moon gravity   -> -1.62
@@ -20,7 +21,7 @@ import pygame
 GRAVITY = -1.62
 
 # Agent mode: Set to True to use the Tutorial 1 agent, False for keyboard control
-USE_AGENT = False
+USE_AGENT = True
 
 # Environment configuration
 ENV_NAME = "LunarLander-v3"
@@ -101,16 +102,38 @@ def print_state(game):
     print("--------------------------")
 
 # TODO: IMPLEMENT HERE THE METHOD TO SAVE DATA TO FILE
-def print_line_data(game):
+def print_line_data(game, reward):
     # Return a string with the game state information to be saved to a file.
     # This method should return a string with the relevant information from the game state, with values separated by commas.
     # The student should decide which features are relevant for the task.
+
+    # if game.y_velocity < -0.2:
+    #     fast_descent = 1
+    # else:
+    #     fast_descent = 0
+    magnitude_velocity = math.sqrt(game.x_velocity**2 + game.y_velocity**2)
+
+    # if (game.left_leg_contact == 1 and game.right_leg_contact == 1):
+    #     both_legs_contact = 1
+    # else:
+    #     both_legs_contact = 0
+    
+    # angle_velocity = game.angle * game.angular_velocity
+
+    abs_x_disp = abs(game.x_position)
+    abs_angle = abs(game.angle)
+    
+
+    
     return (
         f"{game.x_position},{game.y_position},"
         f"{game.x_velocity},{game.y_velocity},"
         f"{game.angle},{game.angular_velocity},"
         f"{int(game.left_leg_contact)},{int(game.right_leg_contact)},"
-        f"{game.score},{game.action}"
+        f"{magnitude_velocity},{abs_x_disp},{abs_angle},"
+        # f"{game.score},{abs(game.x_position)},{abs(game.angle)},{fast_descent},"
+        f"{reward},"
+        f"{game.action}"
     )
 
 # TODO: IMPLEMENT HERE THE INTELLIGENT AGENT METHOD
@@ -146,20 +169,20 @@ def move_tutorial_1(game):
     angle=game.angle
 
      # slow down descent
-    if vy < -0.2:
+    if vy < -0.3 and not (game.left_leg_contact or game.right_leg_contact):
         return ACTION_MAIN_ENGINE
 
     # make sure lander is upright
-    if angle < 0.1:
+    if angle < -0.15:
         return ACTION_LEFT_ENGINE
-    elif angle > -0.1:
+    elif angle > 0.15:
         return ACTION_RIGHT_ENGINE
     
     # only if upright, center to landing pad
-    if angle > -0.1 and angle < 0.1:
-        if x > 0.05 and vx > 0:
+    if angle > -0.15 and angle < 0.15:
+        if x > 0.15 and vx > 0.05:
                 return ACTION_LEFT_ENGINE
-        elif x < -0.05 and vx < 0:
+        elif x < -0.15 and vx < -0.05:
                 return ACTION_RIGHT_ENGINE
    
 
@@ -231,7 +254,9 @@ def main():
     game = GameState(observation)
 
     # arff file
-    arff_file = open("all_data_lunarlander.arff", "a")
+    arff_file = open("test_agent.arff", "a")
+    # csv file
+    csv_file = open("test_agent.csv", "a")
 
     if arff_file.tell()==0:
         arff_file.write("@relation lunar_lander\n\n")
@@ -243,9 +268,20 @@ def main():
         arff_file.write("@attribute angular_velocity numeric\n")
         arff_file.write("@attribute left_leg {0,1}\n")
         arff_file.write("@attribute right_leg {0,1}\n")
-        arff_file.write("@attribute score numeric\n")
-        arff_file.write("@attribute action {0,1,2,3}\n\n")
+        # arff_file.write("@attribute abs_x numeric\n")
+        # arff_file.write("@attribute abs_angle numeric\n")
+        # arff_file.write("@attribute fast_descent {0,1}\n")
+        arff_file.write("@attribute magnitude_velocity numeric\n")
+        arff_file.write("@attribute abs_x_disp numeric\n")
+        arff_file.write("@attribute abs_angle numeric\n")
+        arff_file.write("@attribute reward numeric\n")
+        arff_file.write("@attribute action {0,1,2,3}\n")
         arff_file.write("@data\n")
+    
+    if csv_file.tell() == 0:
+        csv_file.write("x_position,y_position,x_velocity,y_velocity,angle,angular_velocity,"
+        "left_leg,right_leg,magnitude_velocity,abs_x_disp,abs_angle,"
+        "reward,action\n")
 
 
     
@@ -274,16 +310,19 @@ def main():
             else:
                 keys_pressed = pygame.key.get_pressed()
                 action = move_keyboard(keys_pressed)
-            
+
             # Store action in game state
             game.action = action
-            
+
             # Execute action
             observation, reward, terminated, truncated, info = env.step(action)
             
+            arff_file.write(print_line_data(game, reward) + "\n")
+            csv_file.write(print_line_data(game, reward) + "\n")
+
             # Update game state
             game.update(observation, reward)
-            arff_file.write(print_line_data(game) + "\n")
+
             
             # Print state
             print_state(game)
@@ -318,6 +357,7 @@ def main():
         env.close()
         pygame.quit()
         arff_file.close()
+        csv_file.close()
         print(f"\nGame ended. Total episodes: {episode_count}")
         print("Thank you for playing!")
 

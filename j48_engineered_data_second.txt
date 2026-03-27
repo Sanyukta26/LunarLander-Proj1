@@ -1,0 +1,127 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     lunar_lander
+Instances:    5994
+Attributes:   13
+              x_position
+              y_position
+              x_velocity
+              y_velocity
+              angle
+              angular_velocity
+              left_leg
+              right_leg
+              score
+              magnitude_velocity
+              both_legs_contact
+              angle_velocity
+              action
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+angle <= 0.097699
+|   angle <= 0.076782
+|   |   y_velocity <= -0.135859
+|   |   |   y_velocity <= -0.157061
+|   |   |   |   y_velocity <= -0.204578
+|   |   |   |   |   y_position <= 1.192662: 1 (4.0)
+|   |   |   |   |   y_position > 1.192662: 2 (12.0)
+|   |   |   |   y_velocity > -0.204578: 1 (1131.0/58.0)
+|   |   |   y_velocity > -0.157061
+|   |   |   |   angle_velocity <= -0.022834: 2 (6.0/1.0)
+|   |   |   |   angle_velocity > -0.022834
+|   |   |   |   |   right_leg = 0
+|   |   |   |   |   |   y_velocity <= -0.143856: 1 (164.0/33.0)
+|   |   |   |   |   |   y_velocity > -0.143856
+|   |   |   |   |   |   |   x_velocity <= -0.547337: 1 (7.0)
+|   |   |   |   |   |   |   x_velocity > -0.547337
+|   |   |   |   |   |   |   |   score <= -1.627984: 1 (8.0/1.0)
+|   |   |   |   |   |   |   |   score > -1.627984
+|   |   |   |   |   |   |   |   |   y_velocity <= -0.140353
+|   |   |   |   |   |   |   |   |   |   y_velocity <= -0.141887
+|   |   |   |   |   |   |   |   |   |   |   x_velocity <= -0.007255: 1 (5.0/1.0)
+|   |   |   |   |   |   |   |   |   |   |   x_velocity > -0.007255: 2 (10.0/1.0)
+|   |   |   |   |   |   |   |   |   |   y_velocity > -0.141887: 1 (4.0)
+|   |   |   |   |   |   |   |   |   y_velocity > -0.140353: 2 (18.0)
+|   |   |   |   |   right_leg = 1: 1 (6.0)
+|   |   y_velocity > -0.135859: 1 (1485.0/1.0)
+|   angle > 0.076782
+|   |   angle_velocity <= -0.029485: 3 (69.0/3.0)
+|   |   angle_velocity > -0.029485
+|   |   |   angle_velocity <= -0.01586
+|   |   |   |   angle <= 0.086965: 1 (34.0)
+|   |   |   |   angle > 0.086965
+|   |   |   |   |   y_velocity <= -0.154248: 3 (15.0/1.0)
+|   |   |   |   |   y_velocity > -0.154248
+|   |   |   |   |   |   angular_velocity <= -0.245188: 2 (3.0)
+|   |   |   |   |   |   angular_velocity > -0.245188: 3 (5.0/2.0)
+|   |   |   angle_velocity > -0.01586
+|   |   |   |   y_velocity <= -0.132953
+|   |   |   |   |   y_velocity <= -0.14662: 1 (145.0/9.0)
+|   |   |   |   |   y_velocity > -0.14662: 2 (6.0/1.0)
+|   |   |   |   y_velocity > -0.132953: 1 (115.0)
+angle > 0.097699
+|   angle <= 0.121805
+|   |   angular_velocity <= 0.163569
+|   |   |   both_legs_contact = 0: 3 (230.0/13.0)
+|   |   |   both_legs_contact = 1
+|   |   |   |   y_position <= 0.258839: 3 (42.0)
+|   |   |   |   y_position > 0.258839
+|   |   |   |   |   x_velocity <= -0.161521: 1 (4.0)
+|   |   |   |   |   x_velocity > -0.161521: 3 (8.0)
+|   |   angular_velocity > 0.163569
+|   |   |   angle <= 0.112452: 1 (98.0/10.0)
+|   |   |   angle > 0.112452
+|   |   |   |   angular_velocity <= 0.352351
+|   |   |   |   |   angle <= 0.115022
+|   |   |   |   |   |   angular_velocity <= 0.259935: 3 (4.0)
+|   |   |   |   |   |   angular_velocity > 0.259935: 1 (4.0)
+|   |   |   |   |   angle > 0.115022: 3 (25.0/1.0)
+|   |   |   |   angular_velocity > 0.352351
+|   |   |   |   |   angle <= 0.119683: 1 (30.0/2.0)
+|   |   |   |   |   angle > 0.119683
+|   |   |   |   |   |   angular_velocity <= 0.397047: 3 (2.0)
+|   |   |   |   |   |   angular_velocity > 0.397047: 1 (6.0/1.0)
+|   angle > 0.121805: 3 (2289.0/96.0)
+
+Number of Leaves  : 	33
+
+Size of the tree : 	65
+
+
+Time taken to build model: 0.06 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        5687               94.8782 %
+Incorrectly Classified Instances       307                5.1218 %
+Kappa statistic                          0.9021
+Mean absolute error                      0.0413
+Root mean squared error                  0.1529
+Relative absolute error                 15.3353 %
+Root relative squared error             41.6938 %
+Total Number of Instances             5994     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 ?        0.000    ?          ?        ?          ?        ?         ?         0
+                 0.986    0.051    0.955      0.986    0.970      0.937    0.980     0.972     1
+                 0.124    0.005    0.523      0.124    0.200      0.239    0.742     0.199     2
+                 0.992    0.038    0.951      0.992    0.971      0.949    0.978     0.951     3
+Weighted Avg.    0.949    0.043    0.934      0.949    0.935      0.910    0.968     0.927     
+
+=== Confusion Matrix ===
+
+    a    b    c    d   <-- classified as
+    0    0    0    0 |    a = 0
+    0 3098   24   21 |    b = 1
+    0  131   34  110 |    c = 2
+    0   14    7 2555 |    d = 3
+
