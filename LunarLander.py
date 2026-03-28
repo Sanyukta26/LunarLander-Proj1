@@ -13,6 +13,9 @@ import sys
 import time
 import pygame
 import math
+import joblib
+import numpy as np
+import json
 
 # GRAVITY setting
 # Moon gravity   -> -1.62
@@ -217,6 +220,13 @@ def move_keyboard(keys_pressed):
         return ACTION_RIGHT_ENGINE
     else:
         return ACTION_NOTHING
+
+
+def
+
+
+
+
 
 def main():
     """Main game loop."""
