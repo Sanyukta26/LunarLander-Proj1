@@ -17,6 +17,11 @@ import joblib
 import numpy as np
 import json
 
+#phase 3: trained model is loaded at start of execution
+clf=joblib.load('lunarlander_decisiontree.pkl')
+with open("features.json", "r") as f: features = json.load(f)
+print(f"Loaded ML agent. Features: {features}")
+
 # GRAVITY setting
 # Moon gravity   -> -1.62
 # Mars gravity   -> -3.72
@@ -25,6 +30,7 @@ GRAVITY = -1.62
 
 # Agent mode: Set to True to use the Tutorial 1 agent, False for keyboard control
 USE_AGENT = True
+USE_ML_AGENT = False
 
 # Environment configuration
 ENV_NAME = "LunarLander-v3"
@@ -139,6 +145,25 @@ def print_line_data(game, reward):
         f"{game.action}"
     )
 
+#phase 3 at each timestep, current state is converted into selected feature representation
+def building_feat_vector(game):
+    magnitude_velocity = math.sqrt(game.x_velocity ** 2 + game.y_velocity ** 2)
+    abs_x_disp = abs(game.x_position)
+    abs_angle = abs(game.angle)
+
+    return np.array([[
+        game.x_position, game.y_position, game.x_velocity, game.y_velocity,
+        game.angle, game.angular_velocity, game.left_leg_contact, game.right_leg_contact,
+        np.sqrt(game.x_velocity ** 2 + game.y_velocity ** 2),
+        abs(game.x_position), abs(game.angle)
+    ]])
+
+#phase 3: The model predicts the action using model.predict()
+def move_ml_agent(game):
+    X= building_feat_vector(game)
+    action = int(clf.predict(X)[0])
+    return action
+
 # TODO: IMPLEMENT HERE THE INTELLIGENT AGENT METHOD
 def move_tutorial_1(game):
     # Implement your own rule-based agent to land the spacecraft.
@@ -220,13 +245,6 @@ def move_keyboard(keys_pressed):
         return ACTION_RIGHT_ENGINE
     else:
         return ACTION_NOTHING
-
-
-def
-
-
-
-
 
 def main():
     """Main game loop."""
@@ -317,6 +335,8 @@ def main():
             # Determine action based on USE_AGENT variable
             if USE_AGENT:
                 action = move_tutorial_1(game)
+            elif USE_ML_AGENT:
+                action=move_ml_agent(game)
             else:
                 keys_pressed = pygame.key.get_pressed()
                 action = move_keyboard(keys_pressed)
